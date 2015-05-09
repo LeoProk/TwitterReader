@@ -15,12 +15,10 @@
  */
 package com.example.leonid.twitterreader.Interfaces;
 
-import java.util.concurrent.ExecutionException;
-
 /**
- *interface for async task complementation
+ * default interface for UI elements (toolbar, drawer , ect...)
  */
-public interface OnTaskCompleted {
-    void onTaskCompleted() throws ExecutionException, InterruptedException;
 
-}
+    public interface UIInterface {
+    Object doTask();
+ }

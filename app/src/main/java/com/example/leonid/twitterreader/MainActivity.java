@@ -1,8 +1,23 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.example.leonid.twitterreader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,36 +31,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.example.leonid.twitterreader.Drawer.CustomDrawer;
+import com.example.leonid.twitterreader.Interfaces.UIInterface;
 import com.example.leonid.twitterreader.Fragments.SearchTweetsFragment;
-import com.example.leonid.twitterreader.Twitter.TwitterLogin;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.example.leonid.twitterreader.UserInterface.UIFactory;
 
+// Main activity. Calls the drawer & tool bar classes. Creates new twitter search fragment onCreate.
 
 public class MainActivity extends ActionBarActivity {
     ActionBarDrawerToggle mDrawerToggle;
-    private TwitterLoginButton loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //call the class for login
-        TwitterLogin twitterLogin = new TwitterLogin(this);
-       /* //crate the twitter login if network avaliable
-        loginButton=(TwitterLoginButton) findViewById(R.id.twitter_login_button);
-        if(isNetworkConnected()){
-        twitterApi.twitterLogIn(loginButton);}*/
         //create the toolbar
-        CustomToolbar customToolbar = new  CustomToolbar(this);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        customToolbar.menuActionBarHandling(toolbar);
+        UIInterface getToolbar = UIFactory.getUI(this,toolbar);
+        getToolbar.doTask();
         //create the drawer
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView mDrawerList = (ListView) findViewById(R.id.slider_list);
-        CustomDrawer customDrawer = new CustomDrawer(this,mDrawerLayout,mDrawerList);
-        mDrawerToggle = customDrawer.crateDrawer();
+        UIInterface getDrawer = UIFactory.getUI(this,mDrawerLayout,mDrawerList);
+        mDrawerToggle = (ActionBarDrawerToggle)getDrawer.doTask();
         //create the twitter time line fragment
 
         Fragment fragment = new SearchTweetsFragment();
@@ -88,18 +95,5 @@ public class MainActivity extends ActionBarActivity {
         if (fragment != null) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    // Checks if network connection avaliable  and if not show toast message
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        if (ni == null) {
-            Toast.makeText(this, getResources().getString(R.string.no_connection),
-                    Toast.LENGTH_LONG).show();
-            return false;
-        } else
-            return true;
-
     }
 }

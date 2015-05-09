@@ -1,30 +1,95 @@
-package com.example.leonid.twitterreader.Drawer;
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.example.leonid.twitterreader.UserInterface;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.leonid.twitterreader.Fragments.LoginFragment;
 import com.example.leonid.twitterreader.Fragments.SearchTweetsFragment;
+import com.example.leonid.twitterreader.Interfaces.UIInterface;
 import com.example.leonid.twitterreader.R;
+import com.example.leonid.twitterreader.UserInterface.Drawer.CustomAdapter;
+import com.example.leonid.twitterreader.UserInterface.Drawer.RowItem;
+import com.example.leonid.twitterreader.VolleyApi.NetworkCheck;
 
 import java.util.ArrayList;
 
 /**
+ * Factory for tollbar and drawer
+ */
+public class UIFactory {
+
+
+    public static UIInterface getUI(Context context,Toolbar toolbar){
+            return new CustomToolbar(context,toolbar);
+    }
+    public static UIInterface getUI(Context context, DrawerLayout mDrawerLayout, ListView mDrawerList){
+            return new CustomDrawer(context,mDrawerLayout,mDrawerList);
+    }
+
+}
+
+/**
  * This class contain logic of drawer and toolbar
  */
-public class CustomDrawer {
+final class CustomToolbar implements UIInterface {
+    Context context;
+    Toolbar toolbar;
+    public CustomToolbar(Context context,android.support.v7.widget.Toolbar toolbar){
+        this.context = context;
+        this.toolbar = toolbar;
+    }
+
+    //replace the default action bat with toolbar
+    @Override
+    public Object doTask() {
+        final ActionBarActivity activity = (ActionBarActivity) context;
+        activity.setSupportActionBar(toolbar);
+        ActionBar ab = activity.getSupportActionBar();
+        ab.setDisplayShowHomeEnabled(true);
+        ab.setIcon(R.drawable.main_icon);
+        ab.setDisplayUseLogoEnabled(true);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeButtonEnabled(true);
+        return null;
+    }
+
+
+
+}
+
+
+/**
+ * This class contain logic of drawer and toolbar
+ */
+
+final class CustomDrawer implements UIInterface {
     Context context;
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
@@ -35,7 +100,9 @@ public class CustomDrawer {
     }
 
     //class of creating and populating navigation drawer
-    public ActionBarDrawerToggle crateDrawer() {
+    @Override
+    public ActionBarDrawerToggle doTask() {
+
         final ActionBarActivity activity = (ActionBarActivity) context;
         //get the arrays from strings
         final String[] menutitles = context.getResources().getStringArray(R.array.titles);
@@ -69,11 +136,12 @@ public class CustomDrawer {
 
         return  mDrawerToggle;
     }
+
     // called when one of the items in drawer is clicked
     class SlideitemListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-           updateDisplay(position);
+            updateDisplay(position);
         }
     }
     //create fragment based on clicked position
@@ -99,7 +167,7 @@ public class CustomDrawer {
             default:
                 break;
         }
-        if (fragment != null&&isNetworkConnected(context)) {
+        if (fragment != null&& new NetworkCheck(context).isNetworkConnected()) {
             FragmentManager fragmentManager = activity.getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_container, fragment, "twitter").addToBackStack("twitter").commit();
             //closes drawer
@@ -108,17 +176,4 @@ public class CustomDrawer {
         }
     }
 
-    // Checks if network connection avaliable  and if not show toast message
-    private boolean isNetworkConnected(Context context) {
-        final ActionBarActivity activity = (ActionBarActivity) context;
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        if (ni == null) {
-            Toast.makeText(context, activity.getResources().getString(R.string.no_connection),
-                    Toast.LENGTH_LONG).show();
-            return false;
-        } else
-            return true;
-
-    }
 }

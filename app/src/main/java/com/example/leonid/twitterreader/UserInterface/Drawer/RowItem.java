@@ -13,14 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.leonid.twitterreader.Interfaces;
+package com.example.leonid.twitterreader.UserInterface.Drawer;
 
-import java.util.concurrent.ExecutionException;
+// a Bean Class RowItem which is used for setting and getting row data's of each items in ListView ( icons and titles).
 
-/**
- *interface for async task complementation
- */
-public interface OnTaskCompleted {
-    void onTaskCompleted() throws ExecutionException, InterruptedException;
+public class RowItem {
+    private String title;
+    private int icon;
 
+    public RowItem(String title, int icon) {
+        this.title = title;
+        this.icon = icon;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getIcon() {
+        return icon;
+    }
+
+    public void setIcon(int icon) {
+        this.icon = icon;
+    }
 }
