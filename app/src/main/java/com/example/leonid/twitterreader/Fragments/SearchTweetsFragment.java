@@ -16,6 +16,12 @@
 
 package com.example.leonid.twitterreader.Fragments;
 
+import com.example.leonid.twitterreader.CustomListAdapter;
+import com.example.leonid.twitterreader.Interfaces.OnTaskCompleted;
+import com.example.leonid.twitterreader.R;
+import com.example.leonid.twitterreader.Twitter.CreateTweet;
+import com.example.leonid.twitterreader.Twitter.TwitterGetTweets;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -30,32 +36,32 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.example.leonid.twitterreader.Twitter.CreateTweet;
-import com.example.leonid.twitterreader.CustomListAdapter;
-import com.example.leonid.twitterreader.Interfaces.OnTaskCompleted;
-import com.example.leonid.twitterreader.R;
-import com.example.leonid.twitterreader.Twitter.TwitterGetTweets;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Creates tweets search fragment with get string for edit text send it TwitterGetTweets and populate the list view with result
+ * Creates tweets search fragment with get string for edit text send it TwitterGetTweets and
+ * populate the list view with result
  */
 public class SearchTweetsFragment extends Fragment implements OnTaskCompleted {
 
-    private TwitterGetTweets getTweets;
-    private View rootView;
-    private ListView listView;
+    private TwitterGetTweets mGetTweets;
+
+    private View mRootView;
+
+    private ListView mListView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         //set the view of the fragment
-        rootView = inflater.inflate(R.layout.search_fragment, container, false);
+        mRootView = inflater.inflate(R.layout.search_fragment, container, false);
         //getting listview to desplay tweets
-        listView = (ListView) rootView.findViewById(R.id.list);
+        mListView = (ListView) mRootView.findViewById(R.id.list);
         //getting edittext of the search value
-        EditText search = (EditText) rootView.findViewById(R.id.search_user);
+        EditText search = (EditText) mRootView.findViewById(R.id.search_user);
         //get the tweets after text changed
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -70,37 +76,40 @@ public class SearchTweetsFragment extends Fragment implements OnTaskCompleted {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (isNetworkConnected(getActivity())){
-                // canceling asynctask if any was active
-                if(getTweets!=null){
-                getTweets.cancel(true);
+                if (isNetworkConnected(getActivity())) {
+                    // canceling asynctask if any was active
+                    if (mGetTweets != null) {
+                        mGetTweets.cancel(true);
+                    }
+                    mGetTweets = new TwitterGetTweets(SearchTweetsFragment.this);
+                    mGetTweets.execute(s.toString() + " source:twitterfeed");
                 }
-                getTweets = new TwitterGetTweets(SearchTweetsFragment.this);
-                getTweets.execute(s.toString()+" source:twitterfeed");
             }
-    }
         });
 
-
-        return rootView;
+        return mRootView;
     }
+
     // Checks if network connection avaliable  and if not show toast message
     private boolean isNetworkConnected(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
         if (ni == null) {
             Toast.makeText(context, getResources().getString(R.string.no_connection),
                     Toast.LENGTH_LONG).show();
             return false;
-        } else
+        } else {
             return true;
+        }
 
     }
+
     //when task complete getting the array list for asynctask and put them in listview
     @Override
     public void onTaskCompleted() throws ExecutionException, InterruptedException {
-        List<List<String>> getTweetsInfo = getTweets.get();
-        List<CreateTweet>  newsList = new ArrayList<>();
+        List<List<String>> getTweetsInfo = mGetTweets.get();
+        List<CreateTweet> newsList = new ArrayList<>();
         for (int i = 0; i < getTweetsInfo.get(3).size(); i++) {
             CreateTweet news = new CreateTweet();
             news.setThumbnailUrl(getTweetsInfo.get(3).get(i));
@@ -109,8 +118,8 @@ public class SearchTweetsFragment extends Fragment implements OnTaskCompleted {
             news.setDate(getTweetsInfo.get(1).get(i));
             newsList.add(news);
         }
-        Activity host = (Activity) rootView.getContext();
+        Activity host = (Activity) mRootView.getContext();
         CustomListAdapter adapter = new CustomListAdapter(host, newsList);
-        listView.setAdapter(adapter);
+        mListView.setAdapter(adapter);
     }
 }

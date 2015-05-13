@@ -19,6 +19,8 @@ package com.example.leonid.twitterreader.UserInterface.Drawer;
  * Custom adapter which extends BaseAdapter , this is used for inflating each row items of the listview .
  */
 
+import com.example.leonid.twitterreader.R;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -27,23 +29,25 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.example.leonid.twitterreader.R;
 
 import java.util.List;
 
 public class CustomAdapter extends BaseAdapter {
-    Context context;
+
+    Context mContext;
+
     List<RowItem> rowItem;
 
     public CustomAdapter(Context context, List<RowItem> rowItem) {
-        this.context = context;
+        mContext = context;
         this.rowItem = rowItem;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater mInflater = (LayoutInflater) mContext
+                    .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.for_drawer_layout, null);
         }
         ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);

@@ -18,27 +18,29 @@ package com.example.leonid.twitterreader.UserInterface.Drawer;
 // a Bean Class RowItem which is used for setting and getting row data's of each items in ListView ( icons and titles).
 
 public class RowItem {
-    private String title;
-    private int icon;
+
+    private String mTitle;
+
+    private int mIcon;
 
     public RowItem(String title, int icon) {
-        this.title = title;
-        this.icon = icon;
+        mTitle = title;
+        mIcon = icon;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        mTitle = title;
     }
 
     public int getIcon() {
-        return icon;
+        return mIcon;
     }
 
     public void setIcon(int icon) {
-        this.icon = icon;
+        mIcon = icon;
     }
 }

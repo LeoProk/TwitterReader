@@ -16,51 +16,45 @@
 package com.example.leonid.twitterreader.Twitter;
 
 /**
- *  create new entery for list adapter
+ * create new entery for list adapter
  */
 public class CreateTweet {
-    private String title, thumbnailUrl, text, date;
+
+    private String mTitle, mThumbnailUrl, mText, mDate;
+
     //getters and setter for adapter
     public CreateTweet() {
     }
-
-    /*public CreateTweet(String name, String thumbnailUrl, String text, String date) {
-        this.title = name;
-        this.thumbnailUrl = thumbnailUrl;
-        this.text = text;
-        this.date = date;
-    }*/
-
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String name) {
-        this.title = name;
+        this.mTitle = name;
     }
 
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        mDate = date;
     }
 
     public String getThumbnailUrl() {
-        return thumbnailUrl;
+        return mThumbnailUrl;
     }
 
     public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
+        mThumbnailUrl = thumbnailUrl;
     }
 
     public String getText() {
-        return text;
+        return mText;
     }
 
     public void setText(String textInfo) {
-        this.text = textInfo;
+        mText = textInfo;
     }
 
 

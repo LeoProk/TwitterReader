@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-package com.example.leonid.twitterreader.VolleyApi;
+package com.example.leonid.twitterreader;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-import com.example.leonid.twitterreader.R;
-
 /**
  * Checks if network connection avaliable  and if not show toast message
  */
 public class NetworkCheck {
 
-    Context context;
+    Context mContext;
 
-    public NetworkCheck(Context context){
-        this.context = context;
+    public NetworkCheck(Context context) {
+        mContext = context;
     }
 
     // Checks if network connection avaliable  and if not show toast message
     public boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) mContext
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
         if (ni == null) {
-            Toast.makeText(context, context.getResources().getString(R.string.no_connection),
+            Toast.makeText(mContext, mContext.getResources().getString(R.string.no_connection),
                     Toast.LENGTH_LONG).show();
             return false;
-        } else
+        } else {
             return true;
+        }
 
     }
 }

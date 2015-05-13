@@ -15,6 +15,14 @@
  */
 package com.example.leonid.twitterreader.UserInterface;
 
+import com.example.leonid.twitterreader.Fragments.LoginFragment;
+import com.example.leonid.twitterreader.Fragments.SearchTweetsFragment;
+import com.example.leonid.twitterreader.Interfaces.UIInterface;
+import com.example.leonid.twitterreader.NetworkCheck;
+import com.example.leonid.twitterreader.R;
+import com.example.leonid.twitterreader.UserInterface.Drawer.CustomAdapter;
+import com.example.leonid.twitterreader.UserInterface.Drawer.RowItem;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -29,14 +37,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.leonid.twitterreader.Fragments.LoginFragment;
-import com.example.leonid.twitterreader.Fragments.SearchTweetsFragment;
-import com.example.leonid.twitterreader.Interfaces.UIInterface;
-import com.example.leonid.twitterreader.R;
-import com.example.leonid.twitterreader.UserInterface.Drawer.CustomAdapter;
-import com.example.leonid.twitterreader.UserInterface.Drawer.RowItem;
-import com.example.leonid.twitterreader.VolleyApi.NetworkCheck;
-
 import java.util.ArrayList;
 
 /**
@@ -45,11 +45,13 @@ import java.util.ArrayList;
 public class UIFactory {
 
 
-    public static UIInterface getUI(Context context,Toolbar toolbar){
-            return new CustomToolbar(context,toolbar);
+    public static UIInterface getUI(Context context, Toolbar toolbar) {
+        return new CustomToolbar(context, toolbar);
     }
-    public static UIInterface getUI(Context context, DrawerLayout mDrawerLayout, ListView mDrawerList){
-            return new CustomDrawer(context,mDrawerLayout,mDrawerList);
+
+    public static UIInterface getUI(Context context, DrawerLayout mDrawerLayout,
+            ListView mDrawerList) {
+        return new CustomDrawer(context, mDrawerLayout, mDrawerList);
     }
 
 }
@@ -58,18 +60,21 @@ public class UIFactory {
  * This class contain logic of drawer and toolbar
  */
 final class CustomToolbar implements UIInterface {
-    Context context;
-    Toolbar toolbar;
-    public CustomToolbar(Context context,android.support.v7.widget.Toolbar toolbar){
-        this.context = context;
-        this.toolbar = toolbar;
+
+    Context mContext;
+
+    Toolbar mToolbar;
+
+    public CustomToolbar(Context context, android.support.v7.widget.Toolbar toolbar) {
+        mContext = context;
+        mToolbar = toolbar;
     }
 
     //replace the default action bat with toolbar
     @Override
     public Object doTask() {
-        final ActionBarActivity activity = (ActionBarActivity) context;
-        activity.setSupportActionBar(toolbar);
+        final ActionBarActivity activity = (ActionBarActivity) mContext;
+        activity.setSupportActionBar(mToolbar);
         ActionBar ab = activity.getSupportActionBar();
         ab.setDisplayShowHomeEnabled(true);
         ab.setIcon(R.drawable.main_icon);
@@ -81,7 +86,6 @@ final class CustomToolbar implements UIInterface {
     }
 
 
-
 }
 
 
@@ -90,26 +94,31 @@ final class CustomToolbar implements UIInterface {
  */
 
 final class CustomDrawer implements UIInterface {
-    Context context;
+
+    Context mContext;
+
     DrawerLayout mDrawerLayout;
+
     ListView mDrawerList;
-    public CustomDrawer(Context context, DrawerLayout mDrawerLayout, ListView mDrawerList){
-        this.context = context;
-        this.mDrawerLayout = mDrawerLayout;
-        this.mDrawerList = mDrawerList;
+
+    public CustomDrawer(Context context, DrawerLayout drawerLayout, ListView drawerList) {
+        mContext = context;
+        this.mDrawerLayout = drawerLayout;
+        this.mDrawerList = drawerList;
     }
 
     //class of creating and populating navigation drawer
     @Override
     public ActionBarDrawerToggle doTask() {
 
-        final ActionBarActivity activity = (ActionBarActivity) context;
+        final ActionBarActivity activity = (ActionBarActivity) mContext;
         //get the arrays from strings
-        final String[] menutitles = context.getResources().getStringArray(R.array.titles);
-        final TypedArray menuIcons = context.getResources().obtainTypedArray(R.array.icons);
+        final String[] menutitles = mContext.getResources().getStringArray(R.array.titles);
+        final TypedArray menuIcons = mContext.getResources().obtainTypedArray(R.array.icons);
         ArrayList<RowItem> rowItems = new ArrayList<>();
         //create the drawer
-        ActionBarDrawerToggle  mDrawerToggle = new ActionBarDrawerToggle(activity, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(activity, mDrawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
@@ -130,29 +139,22 @@ final class CustomDrawer implements UIInterface {
 
         }
         menuIcons.recycle();
-        CustomAdapter adapter = new CustomAdapter(context, rowItems);
+        CustomAdapter adapter = new CustomAdapter(mContext, rowItems);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new SlideitemListener());
 
-        return  mDrawerToggle;
+        return mDrawerToggle;
     }
 
-    // called when one of the items in drawer is clicked
-    class SlideitemListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            updateDisplay(position);
-        }
-    }
     //create fragment based on clicked position
     private void updateDisplay(int position) {
         //check for active fragment and delete them
-        final ActionBarActivity activity = (ActionBarActivity) context;
+        final ActionBarActivity activity = (ActionBarActivity) mContext;
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
-        if(activity.getFragmentManager().findFragmentByTag("twitter") != null){
+        if (activity.getFragmentManager().findFragmentByTag("twitter") != null) {
             ft.remove(activity.getFragmentManager().findFragmentByTag("twitter")).commit();
         }
-        if(activity.getFragmentManager().findFragmentByTag("twitter") != null){
+        if (activity.getFragmentManager().findFragmentByTag("twitter") != null) {
             ft.remove(activity.getFragmentManager().findFragmentByTag("twitter"));
         }
         //create the fragment
@@ -167,12 +169,22 @@ final class CustomDrawer implements UIInterface {
             default:
                 break;
         }
-        if (fragment != null&& new NetworkCheck(context).isNetworkConnected()) {
+        if (fragment != null && new NetworkCheck(mContext).isNetworkConnected()) {
             FragmentManager fragmentManager = activity.getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment, "twitter").addToBackStack("twitter").commit();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment, "twitter")
+                    .addToBackStack("twitter").commit();
             //closes drawer
             mDrawerLayout.closeDrawer(mDrawerList);
 
+        }
+    }
+
+    // called when one of the items in drawer is clicked
+    class SlideitemListener implements ListView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            updateDisplay(position);
         }
     }
 

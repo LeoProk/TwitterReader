@@ -16,13 +16,14 @@
 
 package com.example.leonid.twitterreader;
 
+import com.example.leonid.twitterreader.Fragments.SearchTweetsFragment;
+import com.example.leonid.twitterreader.Interfaces.UIInterface;
+import com.example.leonid.twitterreader.UserInterface.UIFactory;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -30,14 +31,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
-import com.example.leonid.twitterreader.Interfaces.UIInterface;
-import com.example.leonid.twitterreader.Fragments.SearchTweetsFragment;
-import com.example.leonid.twitterreader.UserInterface.UIFactory;
 
 // Main activity. Calls the drawer & tool bar classes. Creates new twitter search fragment onCreate.
 
 public class MainActivity extends ActionBarActivity {
+
     ActionBarDrawerToggle mDrawerToggle;
 
     @Override
@@ -45,19 +43,20 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //create the toolbar
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        UIInterface getToolbar = UIFactory.getUI(this,toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        UIInterface getToolbar = UIFactory.getUI(this, toolbar);
         getToolbar.doTask();
         //create the drawer
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ListView mDrawerList = (ListView) findViewById(R.id.slider_list);
-        UIInterface getDrawer = UIFactory.getUI(this,mDrawerLayout,mDrawerList);
-        mDrawerToggle = (ActionBarDrawerToggle)getDrawer.doTask();
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ListView drawerList = (ListView) findViewById(R.id.slider_list);
+        UIInterface getDrawer = UIFactory.getUI(this, drawerLayout, drawerList);
+        mDrawerToggle = (ActionBarDrawerToggle) getDrawer.doTask();
         //create the twitter time line fragment
 
         Fragment fragment = new SearchTweetsFragment();
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.frame_container, fragment, "twitter").addToBackStack("twitter").commit();
+        fragmentManager.beginTransaction().add(R.id.frame_container, fragment, "twitter")
+                .addToBackStack("twitter").commit();
     }
 
 
@@ -84,6 +83,7 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

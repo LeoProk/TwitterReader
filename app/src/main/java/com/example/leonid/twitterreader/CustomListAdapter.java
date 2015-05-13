@@ -16,6 +16,10 @@
 
 package com.example.leonid.twitterreader;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.example.leonid.twitterreader.Twitter.CreateTweet;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -24,31 +28,31 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.example.leonid.twitterreader.Twitter.CreateTweet;
-
 import java.util.List;
 
 public class CustomListAdapter extends BaseAdapter {
-    private Activity activity;
-    private LayoutInflater inflater;
-    private List<CreateTweet> newsItems;
-    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+
+    ImageLoader mImageLoader = AppController.getInstance().getImageLoader();
+
+    private Activity mActivity;
+
+    private LayoutInflater mInflater;
+
+    private List<CreateTweet> mNewsItems;
 
     public CustomListAdapter(Activity activity, List<CreateTweet> movieItems) {
-        this.activity = activity;
-        this.newsItems = movieItems;
+        mActivity = activity;
+        mNewsItems = movieItems;
     }
 
     @Override
     public int getCount() {
-        return newsItems.size();
+        return mNewsItems.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return newsItems.get(location);
+        return mNewsItems.get(location);
     }
 
     @Override
@@ -59,14 +63,17 @@ public class CustomListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (inflater == null)
-            inflater = (LayoutInflater) activity
+        if (mInflater == null) {
+            mInflater = (LayoutInflater) mActivity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_row, null);
+        }
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.list_row, null);
+        }
 
-        if (imageLoader == null)
-            imageLoader = AppController.getInstance().getImageLoader();
+        if (mImageLoader == null) {
+            mImageLoader = AppController.getInstance().getImageLoader();
+        }
         NetworkImageView thumbNail = (NetworkImageView) convertView
                 .findViewById(R.id.thumbnail);
         TextView title = (TextView) convertView.findViewById(R.id.title);
@@ -74,10 +81,10 @@ public class CustomListAdapter extends BaseAdapter {
 
         TextView date = (TextView) convertView.findViewById(R.id.date);
         // getting movie data for the row
-        CreateTweet m = newsItems.get(position);
+        CreateTweet m = mNewsItems.get(position);
 
         // thumbnail image
-        thumbNail.setImageUrl(m.getThumbnailUrl(), imageLoader);
+        thumbNail.setImageUrl(m.getThumbnailUrl(), mImageLoader);
 
         // title
         title.setText(m.getTitle());

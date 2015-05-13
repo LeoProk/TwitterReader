@@ -15,8 +15,6 @@
  */
 package com.example.leonid.twitterreader.Twitter;
 
-import android.content.Context;
-
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -26,14 +24,9 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 /**
  * This class contain twitter login code from TwitterAPI
  */
- public class TwitterLogin {
-    private Context context;
-    public TwitterLogin(Context context){
-        this.context = context;
-    }
+public class TwitterLogin {
 
-
-    public void twitterLogIn(TwitterLoginButton loginButton){
+    public void twitterLogIn(TwitterLoginButton loginButton) {
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {

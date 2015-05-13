@@ -16,10 +16,10 @@
 
 package com.example.leonid.twitterreader.Twitter;
 
+import com.example.leonid.twitterreader.Interfaces.OnTaskCompleted;
+
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.example.leonid.twitterreader.Interfaces.OnTaskCompleted;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,18 +35,26 @@ import twitter4j.conf.ConfigurationBuilder;
 /**
  * This class query string using twitter4j and fetching results
  */
-public class TwitterGetTweets extends AsyncTask<String,Void,List<List<String>>> {
-    private OnTaskCompleted listener;
-    private List<List<String>> tweetsInfo;
-    QueryResult result;
+public class TwitterGetTweets extends AsyncTask<String, Void, List<List<String>>> {
+
     //dev info
     private static final String CONSUMER_KEY = "myT2UGT74XR7AIr9VpEaq1HWr";
-    private static final String CONSUMER_SECRET = "IPrxSt5x8dSBr18FbykzBHk8ly2Iwfy6HuONblbW2ysDWfDyuH" ;
-    private static final String ACCESS_KEY = "3216913431-gad2CG8aKCkLPb4f9CZELs4wtYISwgUXWI2kukC" ;
-    private static final String ACCESS_SECRET ="N6g9GTTHeS0w7B0RsHYqdwiHcjXA7o9wOsQk8uqcPdh0j" ;
+
+    private static final String CONSUMER_SECRET
+            = "IPrxSt5x8dSBr18FbykzBHk8ly2Iwfy6HuONblbW2ysDWfDyuH";
+
+    private static final String ACCESS_KEY = "3216913431-gad2CG8aKCkLPb4f9CZELs4wtYISwgUXWI2kukC";
+
+    private static final String ACCESS_SECRET = "N6g9GTTHeS0w7B0RsHYqdwiHcjXA7o9wOsQk8uqcPdh0j";
+
+    QueryResult mResult;
+
+    private OnTaskCompleted mListener;
+
+    private List<List<String>> mTweetsInfo;
 
     public TwitterGetTweets(OnTaskCompleted listener) {
-        this.listener = listener;
+        mListener = listener;
     }
 
     @Override
@@ -55,8 +63,8 @@ public class TwitterGetTweets extends AsyncTask<String,Void,List<List<String>>> 
         List<String> titles = new ArrayList<>();
         List<String> images = new ArrayList<>();
         List<String> date = new ArrayList<>();
-        tweetsInfo = new ArrayList<>();
-            if (!isCancelled()) {
+        mTweetsInfo = new ArrayList<>();
+        if (!isCancelled()) {
             ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setDebugEnabled(true)
                     .setOAuthConsumerKey(CONSUMER_KEY)
@@ -70,41 +78,44 @@ public class TwitterGetTweets extends AsyncTask<String,Void,List<List<String>>> 
             //how much tweets need to be displayed(max 200)
             query.count(200);
             try {
-                result = twitter.search(query);
-                for (twitter4j.Status status : result.getTweets()) {
+                mResult = twitter.search(query);
+                for (twitter4j.Status status :  mResult.getTweets()) {
                     if (!isCancelled()) {
                         texts.add(status.getText());
                         titles.add(status.getUser().getName());
                         images.add(status.getUser().getBiggerProfileImageURL());
                         String cleanDate = status.getCreatedAt().toString();
-                        date.add(cleanDate.substring(0,cleanDate.length()-15 )+" "+cleanDate.substring(cleanDate.length()-4));
+                        date.add(cleanDate.substring(0, cleanDate.length() - 15) + " " + cleanDate
+                                .substring(cleanDate.length() - 4));
                     }
                 }
             } catch (TwitterException e) {
-               Log.e("exeption",e.toString());
+                Log.e("exeption", e.toString());
             }
-                //loop teuth results and create array list for list view
+            //loop teuth results and create array list for list view
 
-            tweetsInfo.add(titles);
-            tweetsInfo.add(date);
-            tweetsInfo.add(texts);
-            tweetsInfo.add(images);
+            mTweetsInfo.add(titles);
+            mTweetsInfo.add(date);
+            mTweetsInfo.add(texts);
+            mTweetsInfo.add(images);
 
         }
-        return tweetsInfo;
+        return  mTweetsInfo;
     }
+
     @Override
     protected void onPostExecute(List<List<String>> nothing) {
         try {
-            listener.onTaskCompleted();
+            mListener.onTaskCompleted();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        super.onPostExecute(tweetsInfo);
+        super.onPostExecute( mTweetsInfo);
 
     }
+
     @Override
     protected void onCancelled() {
         super.onCancelled();

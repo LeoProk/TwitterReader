@@ -19,6 +19,7 @@ package com.example.leonid.twitterreader.Interfaces;
  * default interface for UI elements (toolbar, drawer , ect...)
  */
 
-    public interface UIInterface {
+public interface UIInterface {
+
     Object doTask();
- }
+}
