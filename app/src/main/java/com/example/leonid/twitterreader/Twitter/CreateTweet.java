@@ -23,38 +23,30 @@ public class CreateTweet {
     private String mTitle, mThumbnailUrl, mText, mDate;
 
     //getters and setter for adapter
-    public CreateTweet() {
-    }
-    public String getTitle() {
-        return mTitle;
+    public CreateTweet(String title, String thumbnailUrl, String text, String date) {
+        mTitle = title;
+        mThumbnailUrl = thumbnailUrl;
+        mText = text;
+        mDate = date;
+
     }
 
-    public void setTitle(String name) {
-        this.mTitle = name;
+    public String getTitle() {
+        return mTitle;
     }
 
     public String getDate() {
         return mDate;
     }
 
-    public void setDate(String date) {
-        mDate = date;
-    }
 
     public String getThumbnailUrl() {
         return mThumbnailUrl;
     }
 
-    public void setThumbnailUrl(String thumbnailUrl) {
-        mThumbnailUrl = thumbnailUrl;
-    }
 
     public String getText() {
         return mText;
-    }
-
-    public void setText(String textInfo) {
-        mText = textInfo;
     }
 
 

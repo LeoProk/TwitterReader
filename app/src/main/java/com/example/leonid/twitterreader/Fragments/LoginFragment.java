@@ -15,9 +15,9 @@
  */
 package com.example.leonid.twitterreader.Fragments;
 
-import com.example.leonid.twitterreader.NetworkCheck;
 import com.example.leonid.twitterreader.R;
 import com.example.leonid.twitterreader.Twitter.TwitterLogin;
+import com.example.leonid.twitterreader.Utilities.UtilitiesFactory;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import android.app.Fragment;
@@ -40,8 +40,7 @@ public class LoginFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.login_fragment, container, false);
         final TwitterLogin twitterLogin = new TwitterLogin();
         mLoginButton = (TwitterLoginButton) rootView.findViewById(R.id.twitter_login_button);
-        NetworkCheck networkCheck = new NetworkCheck(getActivity());
-        if (networkCheck.isNetworkConnected()) {
+        if ((boolean) UtilitiesFactory.checkNetwork(getActivity()).doTask()) {
             twitterLogin.twitterLogIn(mLoginButton);
         }
         return rootView;

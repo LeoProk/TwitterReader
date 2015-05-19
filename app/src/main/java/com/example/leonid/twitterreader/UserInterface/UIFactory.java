@@ -17,11 +17,11 @@ package com.example.leonid.twitterreader.UserInterface;
 
 import com.example.leonid.twitterreader.Fragments.LoginFragment;
 import com.example.leonid.twitterreader.Fragments.SearchTweetsFragment;
-import com.example.leonid.twitterreader.Interfaces.UIInterface;
-import com.example.leonid.twitterreader.NetworkCheck;
+import com.example.leonid.twitterreader.Interfaces.FactoryInterface;
 import com.example.leonid.twitterreader.R;
 import com.example.leonid.twitterreader.UserInterface.Drawer.CustomAdapter;
 import com.example.leonid.twitterreader.UserInterface.Drawer.RowItem;
+import com.example.leonid.twitterreader.Utilities.UtilitiesFactory;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -45,11 +45,11 @@ import java.util.ArrayList;
 public class UIFactory {
 
 
-    public static UIInterface getUI(Context context, Toolbar toolbar) {
+    public static FactoryInterface getUI(Context context, Toolbar toolbar) {
         return new CustomToolbar(context, toolbar);
     }
 
-    public static UIInterface getUI(Context context, DrawerLayout mDrawerLayout,
+    public static FactoryInterface getUI(Context context, DrawerLayout mDrawerLayout,
             ListView mDrawerList) {
         return new CustomDrawer(context, mDrawerLayout, mDrawerList);
     }
@@ -59,7 +59,7 @@ public class UIFactory {
 /**
  * This class contain logic of drawer and toolbar
  */
-final class CustomToolbar implements UIInterface {
+final class CustomToolbar implements FactoryInterface {
 
     Context mContext;
 
@@ -93,7 +93,7 @@ final class CustomToolbar implements UIInterface {
  * This class contain logic of drawer and toolbar
  */
 
-final class CustomDrawer implements UIInterface {
+final class CustomDrawer implements FactoryInterface {
 
     Context mContext;
 
@@ -169,7 +169,7 @@ final class CustomDrawer implements UIInterface {
             default:
                 break;
         }
-        if (fragment != null && new NetworkCheck(mContext).isNetworkConnected()) {
+        if (fragment != null && (boolean) UtilitiesFactory.checkNetwork(mContext).doTask()) {
             FragmentManager fragmentManager = activity.getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_container, fragment, "twitter")
                     .addToBackStack("twitter").commit();

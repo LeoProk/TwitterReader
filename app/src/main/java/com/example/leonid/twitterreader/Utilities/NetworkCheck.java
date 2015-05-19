@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package com.example.leonid.twitterreader;
+package com.example.leonid.twitterreader.Utilities;
+
+import com.example.leonid.twitterreader.Interfaces.FactoryInterface;
+import com.example.leonid.twitterreader.R;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -24,7 +27,7 @@ import android.widget.Toast;
 /**
  * Checks if network connection avaliable  and if not show toast message
  */
-public class NetworkCheck {
+final class NetworkCheck implements FactoryInterface {
 
     Context mContext;
 
@@ -33,7 +36,8 @@ public class NetworkCheck {
     }
 
     // Checks if network connection avaliable  and if not show toast message
-    public boolean isNetworkConnected() {
+    @Override
+    public Object doTask() {
         ConnectivityManager cm = (ConnectivityManager) mContext
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -44,6 +48,5 @@ public class NetworkCheck {
         } else {
             return true;
         }
-
     }
 }

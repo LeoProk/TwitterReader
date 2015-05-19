@@ -19,6 +19,7 @@ package com.example.leonid.twitterreader.Fragments;
 import com.example.leonid.twitterreader.CustomListAdapter;
 import com.example.leonid.twitterreader.Interfaces.OnTaskCompleted;
 import com.example.leonid.twitterreader.R;
+import com.example.leonid.twitterreader.Twitter.AllTweets;
 import com.example.leonid.twitterreader.Twitter.CreateTweet;
 import com.example.leonid.twitterreader.Twitter.TwitterGetTweets;
 
@@ -108,15 +109,10 @@ public class SearchTweetsFragment extends Fragment implements OnTaskCompleted {
     //when task complete getting the array list for asynctask and put them in listview
     @Override
     public void onTaskCompleted() throws ExecutionException, InterruptedException {
-        List<List<String>> getTweetsInfo = mGetTweets.get();
+        AllTweets getTweetsInfo = mGetTweets.get();
         List<CreateTweet> newsList = new ArrayList<>();
-        for (int i = 0; i < getTweetsInfo.get(3).size(); i++) {
-            CreateTweet news = new CreateTweet();
-            news.setThumbnailUrl(getTweetsInfo.get(3).get(i));
-            news.setTitle(getTweetsInfo.get(0).get(i));
-            news.setText(getTweetsInfo.get(2).get(i));
-            news.setDate(getTweetsInfo.get(1).get(i));
-            newsList.add(news);
+        for (int i = 0; i < getTweetsInfo.getSize(); i++) {
+            newsList.add(getTweetsInfo.getTweet(i));
         }
         Activity host = (Activity) mRootView.getContext();
         CustomListAdapter adapter = new CustomListAdapter(host, newsList);

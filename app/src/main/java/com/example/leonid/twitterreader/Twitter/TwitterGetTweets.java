@@ -35,7 +35,7 @@ import twitter4j.conf.ConfigurationBuilder;
 /**
  * This class query string using twitter4j and fetching results
  */
-public class TwitterGetTweets extends AsyncTask<String, Void, List<List<String>>> {
+public class TwitterGetTweets extends AsyncTask<String, Void, AllTweets> {
 
     //dev info
     private static final String CONSUMER_KEY = "myT2UGT74XR7AIr9VpEaq1HWr";
@@ -47,23 +47,22 @@ public class TwitterGetTweets extends AsyncTask<String, Void, List<List<String>>
 
     private static final String ACCESS_SECRET = "N6g9GTTHeS0w7B0RsHYqdwiHcjXA7o9wOsQk8uqcPdh0j";
 
-    QueryResult mResult;
+    private QueryResult mResult;
 
     private OnTaskCompleted mListener;
 
-    private List<List<String>> mTweetsInfo;
+    private AllTweets mTweetsInfo;
 
     public TwitterGetTweets(OnTaskCompleted listener) {
         mListener = listener;
     }
 
     @Override
-    protected List<List<String>> doInBackground(String... params) {
+    protected AllTweets doInBackground(String... params) {
         List<String> texts = new ArrayList<>();
         List<String> titles = new ArrayList<>();
         List<String> images = new ArrayList<>();
         List<String> date = new ArrayList<>();
-        mTweetsInfo = new ArrayList<>();
         if (!isCancelled()) {
             ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setDebugEnabled(true)
@@ -79,7 +78,7 @@ public class TwitterGetTweets extends AsyncTask<String, Void, List<List<String>>
             query.count(200);
             try {
                 mResult = twitter.search(query);
-                for (twitter4j.Status status :  mResult.getTweets()) {
+                for (twitter4j.Status status : mResult.getTweets()) {
                     if (!isCancelled()) {
                         texts.add(status.getText());
                         titles.add(status.getUser().getName());
@@ -93,26 +92,22 @@ public class TwitterGetTweets extends AsyncTask<String, Void, List<List<String>>
                 Log.e("exeption", e.toString());
             }
             //loop teuth results and create array list for list view
-
-            mTweetsInfo.add(titles);
-            mTweetsInfo.add(date);
-            mTweetsInfo.add(texts);
-            mTweetsInfo.add(images);
+            mTweetsInfo = new AllTweets(titles, images, texts, date);
 
         }
-        return  mTweetsInfo;
+        return mTweetsInfo;
     }
 
     @Override
-    protected void onPostExecute(List<List<String>> nothing) {
+    protected void onPostExecute(AllTweets nothing) {
         try {
             mListener.onTaskCompleted();
         } catch (ExecutionException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException e2) {
+            e2.printStackTrace();
         }
-        super.onPostExecute( mTweetsInfo);
+        super.onPostExecute(mTweetsInfo);
 
     }
 

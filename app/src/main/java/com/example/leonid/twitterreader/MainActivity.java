@@ -17,7 +17,7 @@
 package com.example.leonid.twitterreader;
 
 import com.example.leonid.twitterreader.Fragments.SearchTweetsFragment;
-import com.example.leonid.twitterreader.Interfaces.UIInterface;
+import com.example.leonid.twitterreader.Interfaces.FactoryInterface;
 import com.example.leonid.twitterreader.UserInterface.UIFactory;
 
 import android.app.Fragment;
@@ -36,7 +36,7 @@ import android.widget.ListView;
 
 public class MainActivity extends ActionBarActivity {
 
-    ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +44,12 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         //create the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        UIInterface getToolbar = UIFactory.getUI(this, toolbar);
+        FactoryInterface getToolbar = UIFactory.getUI(this, toolbar);
         getToolbar.doTask();
         //create the drawer
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView drawerList = (ListView) findViewById(R.id.slider_list);
-        UIInterface getDrawer = UIFactory.getUI(this, drawerLayout, drawerList);
+        FactoryInterface getDrawer = UIFactory.getUI(this, drawerLayout, drawerList);
         mDrawerToggle = (ActionBarDrawerToggle) getDrawer.doTask();
         //create the twitter time line fragment
 
