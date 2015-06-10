@@ -15,6 +15,7 @@
  */
 package com.example.leonid.twitterreader.Twitter;
 
+import com.example.leonid.twitterreader.Interfaces.FactoryInterface;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -24,10 +25,17 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 /**
  * This class contain twitter login code from TwitterAPI
  */
-public class TwitterLogin {
+final class TwitterLogin implements FactoryInterface {
 
-    public void twitterLogIn(TwitterLoginButton loginButton) {
-        loginButton.setCallback(new Callback<TwitterSession>() {
+    TwitterLoginButton mLoginButton;
+
+    public TwitterLogin(TwitterLoginButton loginButton) {
+        mLoginButton = loginButton;
+    }
+
+    @Override
+    public Object doTask() {
+        mLoginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
             }
@@ -37,7 +45,6 @@ public class TwitterLogin {
                 // Do something on failure
             }
         });
-
+        return null;
     }
-
 }

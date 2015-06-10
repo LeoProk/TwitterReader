@@ -19,15 +19,11 @@ package com.example.leonid.twitterreader.Fragments;
 import com.example.leonid.twitterreader.CustomListAdapter;
 import com.example.leonid.twitterreader.Interfaces.OnTaskCompleted;
 import com.example.leonid.twitterreader.R;
-import com.example.leonid.twitterreader.Twitter.AllTweets;
-import com.example.leonid.twitterreader.Twitter.CreateTweet;
 import com.example.leonid.twitterreader.Twitter.TwitterGetTweets;
+import com.example.leonid.twitterreader.Utilities.UtilitiesFactory;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,10 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -77,7 +70,7 @@ public class SearchTweetsFragment extends Fragment implements OnTaskCompleted {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (isNetworkConnected(getActivity())) {
+                if ((boolean) UtilitiesFactory.checkNetwork(getActivity()).doTask()) {
                     // canceling asynctask if any was active
                     if (mGetTweets != null) {
                         mGetTweets.cancel(true);
@@ -91,31 +84,11 @@ public class SearchTweetsFragment extends Fragment implements OnTaskCompleted {
         return mRootView;
     }
 
-    // Checks if network connection avaliable  and if not show toast message
-    private boolean isNetworkConnected(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        if (ni == null) {
-            Toast.makeText(context, getResources().getString(R.string.no_connection),
-                    Toast.LENGTH_LONG).show();
-            return false;
-        } else {
-            return true;
-        }
-
-    }
-
     //when task complete getting the array list for asynctask and put them in listview
     @Override
     public void onTaskCompleted() throws ExecutionException, InterruptedException {
-        AllTweets getTweetsInfo = mGetTweets.get();
-        List<CreateTweet> newsList = new ArrayList<>();
-        for (int i = 0; i < getTweetsInfo.getSize(); i++) {
-            newsList.add(getTweetsInfo.getTweet(i));
-        }
         Activity host = (Activity) mRootView.getContext();
-        CustomListAdapter adapter = new CustomListAdapter(host, newsList);
+        CustomListAdapter adapter = new CustomListAdapter(host, mGetTweets.get());
         mListView.setAdapter(adapter);
     }
 }

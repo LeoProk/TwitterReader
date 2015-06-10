@@ -35,7 +35,7 @@ import twitter4j.conf.ConfigurationBuilder;
 /**
  * This class query string using twitter4j and fetching results
  */
-public class TwitterGetTweets extends AsyncTask<String, Void, AllTweets> {
+public class TwitterGetTweets extends AsyncTask<String, Void, List<CreateTweet>> {
 
     //dev info
     private static final String CONSUMER_KEY = "myT2UGT74XR7AIr9VpEaq1HWr";
@@ -51,14 +51,15 @@ public class TwitterGetTweets extends AsyncTask<String, Void, AllTweets> {
 
     private OnTaskCompleted mListener;
 
-    private AllTweets mTweetsInfo;
+    private List<CreateTweet> mTweetsInfo;
 
     public TwitterGetTweets(OnTaskCompleted listener) {
         mListener = listener;
     }
 
     @Override
-    protected AllTweets doInBackground(String... params) {
+    protected List<CreateTweet> doInBackground(String... params) {
+        mTweetsInfo = new ArrayList<>();
         List<String> texts = new ArrayList<>();
         List<String> titles = new ArrayList<>();
         List<String> images = new ArrayList<>();
@@ -92,14 +93,18 @@ public class TwitterGetTweets extends AsyncTask<String, Void, AllTweets> {
                 Log.e("exeption", e.toString());
             }
             //loop teuth results and create array list for list view
-            mTweetsInfo = new AllTweets(titles, images, texts, date);
+            for (int i = 0; i < texts.size(); i++) {
+                mTweetsInfo.add(new CreateTweet(titles.get(i), images.get(i), texts.get(i),
+                        date.get(i)));
+            }
+
 
         }
         return mTweetsInfo;
     }
 
     @Override
-    protected void onPostExecute(AllTweets nothing) {
+    protected void onPostExecute(List<CreateTweet> nothing) {
         try {
             mListener.onTaskCompleted();
         } catch (ExecutionException e) {

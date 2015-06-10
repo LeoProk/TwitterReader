@@ -13,34 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.leonid.twitterreader.UserInterface.Drawer;
+package com.example.leonid.twitterreader.Twitter;
 
-// a Bean Class RowItem which is used for setting and getting row data's of each items in ListView ( icons and titles).
+import com.example.leonid.twitterreader.Interfaces.FactoryInterface;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
-public class RowItem {
+/**
+ * Factory to ge twitter login
+ */
+public class TwitterAPI {
 
-    private String mTitle;
-
-    private int mIcon;
-
-    public RowItem(String title, int icon) {
-        mTitle = title;
-        mIcon = icon;
-    }
-
-    public String getTitle() {
-        return mTitle;
-    }
-
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
-    public int getIcon() {
-        return mIcon;
-    }
-
-    public void setIcon(int icon) {
-        mIcon = icon;
+    public static FactoryInterface getLogin(TwitterLoginButton loginButton) {
+        return new TwitterLogin(loginButton);
     }
 }

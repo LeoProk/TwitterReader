@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.leonid.twitterreader.UserInterface.Drawer;
+package com.example.leonid.twitterreader.UserInterface;
 
 /**
  * Custom adapter which extends BaseAdapter , this is used for inflating each row items of the listview .
  */
+
 
 import com.example.leonid.twitterreader.R;
 
@@ -32,21 +33,21 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class CustomAdapter extends BaseAdapter {
+final class CustomAdapter extends BaseAdapter {
 
-    Context mContext;
+    Context context;
 
     List<RowItem> rowItem;
 
     public CustomAdapter(Context context, List<RowItem> rowItem) {
-        mContext = context;
+        this.context = context;
         this.rowItem = rowItem;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater mInflater = (LayoutInflater) mContext
+            LayoutInflater mInflater = (LayoutInflater) context
                     .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.for_drawer_layout, null);
         }

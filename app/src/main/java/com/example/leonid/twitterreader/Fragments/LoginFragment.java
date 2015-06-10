@@ -16,7 +16,7 @@
 package com.example.leonid.twitterreader.Fragments;
 
 import com.example.leonid.twitterreader.R;
-import com.example.leonid.twitterreader.Twitter.TwitterLogin;
+import com.example.leonid.twitterreader.Twitter.TwitterAPI;
 import com.example.leonid.twitterreader.Utilities.UtilitiesFactory;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
@@ -31,17 +31,15 @@ import android.view.ViewGroup;
  */
 public class LoginFragment extends Fragment {
 
-    private TwitterLoginButton mLoginButton;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.login_fragment, container, false);
-        final TwitterLogin twitterLogin = new TwitterLogin();
-        mLoginButton = (TwitterLoginButton) rootView.findViewById(R.id.twitter_login_button);
+        final TwitterLoginButton mLoginButton = (TwitterLoginButton) rootView
+                .findViewById(R.id.twitter_login_button);
         if ((boolean) UtilitiesFactory.checkNetwork(getActivity()).doTask()) {
-            twitterLogin.twitterLogIn(mLoginButton);
+            TwitterAPI.getLogin(mLoginButton).doTask();
         }
         return rootView;
     }
